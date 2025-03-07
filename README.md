@@ -42,8 +42,6 @@ Create a **.env** file inside the `server/` directory with the following variabl
 PORT=5000
 MONGO_URI=mongodb+srv://your_mongo_connection_string
 JWT_SECRET=your_secret_key
-PORT = 5000
-MONGO_DB_URL=db_url
 NODE_ENV=environment_configuration
 ```
 
