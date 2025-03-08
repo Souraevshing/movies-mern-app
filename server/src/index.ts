@@ -50,14 +50,14 @@ const run = async () => {
 
     app.listen(process.env.PORT || 5000, () => {
       console.info(
-        chalk.bgGreen.bgGreenBright.black.bold(
+        chalk.bgGreen.bgGreenBright.white.bold(
           `🚀 Server running on port ${process.env.PORT || 5000} 🚀`
         )
       );
     });
   } catch (error) {
     console.error(
-      chalk.bgRed.bgRedBright.black.bold(
+      chalk.bgRed.bgRedBright.white.bold(
         `❌ Server failed to start: ${error.message} ❌`
       )
     );

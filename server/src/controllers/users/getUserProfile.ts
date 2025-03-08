@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "../../middlewares/asyncHandler.js";
-import User from "../../models/User.js";
+import { getUserProfileService } from "../../services/users/getUserProfileService.js";
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -14,7 +14,7 @@ interface AuthenticatedRequest extends Request {
 export const getUserProfile = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await getUserProfileService(req.user._id);
 
       if (user) {
         res.status(200).json({
