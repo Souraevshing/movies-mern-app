@@ -1,7 +1,9 @@
+import chalk from "chalk";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { configDotenv } from "dotenv";
 import express from "express";
+import morgan from "morgan";
 
 import connectDB from "./config/connect.js";
 import logOutUser from "./routes/auth/logOutUser.js";
@@ -25,6 +27,16 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+app.use(
+  morgan((tokens, req, res) => {
+    return chalk.blueBright(
+      `[${tokens.method(req, res)}] ${tokens.url(req, res)} - ${tokens.status(
+        req,
+        res
+      )} ${tokens["response-time"](req, res)}ms`
+    );
+  })
+);
 
 app.use("/api/v1/auth/users", signUpUser);
 app.use("/api/v1/auth/users", signInUser);
@@ -32,7 +44,25 @@ app.use("/api/v1/auth/users", logOutUser);
 app.use("/api/v1/users", getAllUsers);
 app.use("/api/v1/users", getUserProfile);
 
-app.listen(process.env.PORT || 5000, () => {
-  console.info(`Server running on port ${process.env.PORT || 5000}`);
-  connectDB();
-});
+const run = async () => {
+  try {
+    await connectDB();
+
+    app.listen(process.env.PORT || 5000, () => {
+      console.info(
+        chalk.bgGreen.bgGreenBright.black.bold(
+          `🚀 Server running on port ${process.env.PORT || 5000} 🚀`
+        )
+      );
+    });
+  } catch (error) {
+    console.error(
+      chalk.bgRed.bgRedBright.black.bold(
+        `❌ Server failed to start: ${error.message} ❌`
+      )
+    );
+    process.exit(1);
+  }
+};
+
+run();
