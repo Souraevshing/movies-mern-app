@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { configDotenv } from "dotenv";
 import express from "express";
 
@@ -16,6 +17,14 @@ configDotenv();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    preflightContinue: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 app.use("/api/v1/auth/users", signUpUser);
 app.use("/api/v1/auth/users", signInUser);

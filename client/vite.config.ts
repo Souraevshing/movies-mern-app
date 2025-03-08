@@ -13,13 +13,5 @@ export default defineConfig({
   },
   server: {
     hmr: true,
-    allowedHosts: ["http://localhost:5000"],
-    cors: {
-      origin: "http://localhost:5000",
-    },
-    proxy: {
-      "/api/": "http://localhost:3000",
-      "/uploads/": "http://localhost:3000",
-    },
   },
 });

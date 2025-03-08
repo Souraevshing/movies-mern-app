@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 
-import { apiSlice } from "../features/api/apiSlice";
+import { apiSlice } from "../api/apiSlice";
 import authReducer from "../features/auth/authSlice";
 
 const store = configureStore({
@@ -17,3 +17,5 @@ const store = configureStore({
 setupListeners(store.dispatch);
 
 export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
