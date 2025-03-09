@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 
+import { ResponseDto } from "../../dto/response.dto.js";
 import { UserDto } from "../../dto/user.dto.js";
 import User from "../../models/User.js";
 
@@ -16,15 +17,24 @@ export const updateUserService = async (
   username?: string,
   email?: string,
   password?: string
-): Promise<UserDto> => {
+): Promise<UserDto | ResponseDto> => {
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new Error("User not found");
+    return {
+      message: "User not found",
+    };
+  }
+
+  if (email && email !== user.email) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return { message: "Email already in use" };
+    }
+    user.email = email;
   }
 
   user.username = username || user.username;
-  user.email = email || user.email;
 
   if (password) {
     const salt = await bcrypt.genSalt(10);

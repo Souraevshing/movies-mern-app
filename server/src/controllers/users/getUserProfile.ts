@@ -11,6 +11,49 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
+/**
+ * @swagger
+ * /users/profile/{id}:
+ *   get:
+ *     summary: Get user profile by ID
+ *     description: Retrieves profile details of a user by ID. Only accessible to authenticated users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID to fetch the profile
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "65f3a7b1a9123c4567e89d12"
+ *                 username:
+ *                   type: string
+ *                   example: "testUser"
+ *                 email:
+ *                   type: string
+ *                   example: "test@example.com"
+ *                 type:
+ *                   type: string
+ *                   example: "USER"
+ *       401:
+ *         description: Unauthorized - User is not authenticated
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 export const getUserProfile = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
     try {

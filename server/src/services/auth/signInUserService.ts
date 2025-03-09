@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Response } from "express";
 
+import { ResponseDto } from "../../dto/response.dto.js";
 import { UserDto } from "../../dto/user.dto.js";
 import User from "../../models/User.js";
 import generateToken from "../../utils/generate-token.js";
@@ -17,21 +18,21 @@ export const signInUserService = async (
   email: string,
   password: string,
   res: Response
-): Promise<UserDto> => {
+): Promise<UserDto | ResponseDto> => {
   if (!email || !password) {
-    throw new Error("All fields are required");
+    return { message: "All fields are required" };
   }
 
-  const existingUser = await User.findOne({ email }).select("+password");
+  const existingUser = await User.findOne({ email });
 
   if (!existingUser) {
-    throw new Error("User not found");
+    return { message: "User not found" };
   }
 
   const isValidPassword = await bcrypt.compare(password, existingUser.password);
 
   if (!isValidPassword) {
-    throw new Error("Invalid password");
+    return { message: "Invalid password" };
   }
 
   generateToken(res, existingUser._id);

@@ -1,7 +1,7 @@
 import express from "express";
 
-import { updateUser } from "../../controllers/auth/updateUser.js";
 import { getUserProfile } from "../../controllers/users/getUserProfile.js";
+import { updateUser } from "../../controllers/users/updateUser.js";
 import { isAuthenticated } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();

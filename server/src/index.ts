@@ -6,6 +6,7 @@ import express from "express";
 import morgan from "morgan";
 
 import connectDB from "./config/connect.js";
+import { setupSwagger } from "./config/swagger.js";
 import logOutUser from "./routes/auth/logOutUser.js";
 import signInUser from "./routes/auth/signInUser.js";
 import signUpUser from "./routes/auth/signUpUser.js";
@@ -16,17 +17,23 @@ const app = express();
 
 configDotenv();
 
+// setup swagger-ui
+setupSwagger(app);
+
+// express request response config
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://localhost:5000"],
     credentials: true,
     preflightContinue: true,
     methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
   })
 );
+
+// logging
 app.use(
   morgan((tokens, req, res) => {
     return chalk.blueBright(
