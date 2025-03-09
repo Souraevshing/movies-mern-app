@@ -17,11 +17,7 @@ export const getUserProfile = asyncHandler(
       const user = await getUserProfileService(req.user._id);
 
       if (user) {
-        res.status(200).json({
-          _id: user._id,
-          username: user.username,
-          email: user.email,
-        });
+        res.status(200).json(user);
       } else {
         res.status(404).json({
           message: "User not found",

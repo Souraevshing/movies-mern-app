@@ -33,7 +33,7 @@ export const signUpUserService = async (
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  const newUser = new User({ username, email, hashedPassword });
+  const newUser = new User({ username, email, password: hashedPassword });
 
   await newUser.save();
   generateToken(res, newUser._id);

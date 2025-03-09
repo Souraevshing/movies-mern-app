@@ -24,7 +24,7 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
     preflightContinue: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
   })
 );
 app.use(
