@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { Response } from "express";
 
+import { UserDto } from "../../dto/user.dto.js";
 import User from "../../models/User.js";
 
 /**
@@ -15,13 +15,12 @@ export const updateUserService = async (
   userId: string,
   username?: string,
   email?: string,
-  password?: string,
-  res?: Response
-) => {
+  password?: string
+): Promise<UserDto> => {
   const user = await User.findById(userId);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    throw new Error("User not found");
   }
 
   user.username = username || user.username;
@@ -35,10 +34,9 @@ export const updateUserService = async (
   const updatedUser = await user.save();
 
   return {
-    _id: updatedUser._id,
+    _id: updatedUser._id.toString(),
     username: updatedUser.username,
     email: updatedUser.email,
     type: updatedUser.type,
-    message: "Profile updated successfully",
   };
 };

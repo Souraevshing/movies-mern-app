@@ -12,7 +12,9 @@ const connectDB = async () => {
         );
         await User.syncIndexes();
         console.info(
-          chalk.bgBlue.bgBlueBright.white.bold("🔄 Indexes synced successfully")
+          chalk.bgBlue.bgBlueBright.white.bold(
+            "🔄 Indexes synced successfully 🔄"
+          )
         );
       });
   } catch (error) {
