@@ -1,7 +1,7 @@
 import { LoaderIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { useSignupMutation } from "../api/auth";
@@ -73,6 +73,22 @@ const SignUp = () => {
       navigate(redirect);
     }
   }, [navigate, redirect, user]);
+
+  useEffect(() => {
+    if (error) {
+      if ("status" in error) {
+        if (error.status === 401) {
+          toast.error("Invalid credentials");
+        } else if (error.status === 500) {
+          toast.error("Server error. Please try again later.");
+        } else {
+          toast.error("Error signing in");
+        }
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
+    }
+  }, [error]);
 
   return (
     <div className="pl-[10rem] flex flex-wrap">
@@ -171,13 +187,6 @@ const SignUp = () => {
             )}
           </button>
         </form>
-      </div>
-      <div>
-        {error && (
-          <p className="text-red-500 mt-2 text-sm">
-            {typeof error === "string" ? error : JSON.stringify(error)}
-          </p>
-        )}
       </div>
     </div>
   );

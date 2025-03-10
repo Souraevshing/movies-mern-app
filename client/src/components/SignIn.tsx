@@ -1,15 +1,75 @@
-import { useCallback, useState } from "react";
+import { LoaderIcon } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import { useSigninMutation } from "../api/auth";
+import { saveUser } from "../features/auth/authSlice";
+import { AppDispatch, RootState } from "../store";
 
 const SignIn = () => {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
 
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  const navigate = useNavigate();
+
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const redirect = query.get("redirect") || "/";
+
+  const [signin, { isLoading, error }] = useSigninMutation();
+
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log(e);
+    e.preventDefault();
+
+    if (!userInfo.email || !userInfo.password) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    try {
+      const { email, password } = userInfo;
+      const res = await signin({ email, password }).unwrap();
+      dispatch(saveUser({ ...res }));
+      toast.promise(res, {
+        loading: "Signing in...",
+        success: "Signed in successfully",
+        error: "Error signing in",
+      });
+      navigate(redirect);
+    } catch (err) {
+      if (err instanceof Error) toast.error(err.message);
+    }
   };
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, user]);
+
+  useEffect(() => {
+    if (error) {
+      if ("status" in error) {
+        if (error.status === 401) {
+          toast.error("Invalid credentials");
+        } else if (error.status === 500) {
+          toast.error("Server error. Please try again later.");
+        } else {
+          toast.error("Error signing in");
+        }
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
+    }
+  }, [error]);
 
   return (
     <div className="pl-[10rem] flex flex-wrap">
@@ -56,9 +116,14 @@ const SignIn = () => {
             />
           </div>
           <button
+            disabled={isLoading}
             className={`w-full bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer flex justify-center items-center`}
           >
-            Sign In
+            {isLoading ? (
+              <LoaderIcon className="w-6 h-6 transform animate-spin transition-all" />
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
       </div>

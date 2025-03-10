@@ -6,7 +6,7 @@ import {
   OctagonAlertIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
 
 import Navbar from "./components/Navbar";
@@ -33,6 +33,8 @@ const App = () => {
         }}
         swipeDirections={["top", "right"]}
         toastOptions={{ duration: 5000 }}
+        mobileOffset={20}
+        className="transition-all ease-in-out duration-500"
       />
       <main className="py-3">
         <Navbar />

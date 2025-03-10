@@ -16,7 +16,15 @@ export const loginUser = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    signin: builder.mutation({
+      query: (data) => ({
+        url: `${BASE_URL}/api/v1/auth/users/signin`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLogoutMutation, useSignupMutation } = loginUser;
+export const { useLogoutMutation, useSignupMutation, useSigninMutation } =
+  loginUser;
